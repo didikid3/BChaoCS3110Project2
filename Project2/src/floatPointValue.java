@@ -1,4 +1,3 @@
-import java.util.Scanner;
 import java.lang.Math;
 public class floatPointValue {
 	
@@ -6,8 +5,8 @@ public class floatPointValue {
 	public double[] isValid(String x)
 	{
 		double[] resultArray = new double[2];
-		resultArray[0] = -1;
-		resultArray[1] = 0;
+		resultArray[0] = -1;//Value  -1 represents failed
+		resultArray[1] = 0;//Char count
 		
 		int size = x.length();
 		int state = 1;
@@ -94,8 +93,10 @@ public class floatPointValue {
 					if(asciiValue == 41 || asciiValue == 42 || asciiValue == 43 ||
 							asciiValue == 45 || asciiValue == 47) {
 						i = size;
-						if(asciiValue == 41)
-							resultArray[1] = resultArray[1] - 1;
+						/*
+						if(asciiValue != 41)
+							resultArray[1] = resultArray[1] + 1;
+							*/
 					}
 					else{
 						return resultArray;
@@ -295,10 +296,7 @@ public class floatPointValue {
 		) {
 			return resultArray;
 		}
-		if(state == 5)
-		{
-			resultArray[1] += 1;
-		}
+
 		value = value * Math.pow(10, -1* decimal);
 		if(exponentSign)
 			value = value * Math.pow(10,-1* exponent);
@@ -306,6 +304,9 @@ public class floatPointValue {
 			value = value * Math.pow(10, exponent);
 		
 		resultArray[0] = value;
+		
+		//Iterates over "invalid chars" So must delete from count
+		//Must make sure expressions handles invalid
 		resultArray[1] = resultArray[1] - 1;
 		return resultArray;
 	}

@@ -8,8 +8,8 @@ public class expressionHandle {
 	public double[] evalEx(String input) {
 		
 		double[] result = new double[2];
-		result[0] = 1;
-		result[1] = 0;
+		result[0] = 1;//Failed or Pass
+		result[1] = 0;//Value of Calculation
 		int size = input.length();
 		char curr;
 		//My factors w/o including '('expression')'
@@ -54,15 +54,35 @@ public class expressionHandle {
 			
 			else if(curr == '+' || curr == '-' || curr == '*' || curr == '/') {
 				while(!operator.empty() && hasPrecedence(curr, operator.peek())) {
-					values.push(
-							applyOperation( operator.pop(),
-											values.pop(),
-											values.pop()
-											)
-							);
+					if(values.empty()) {
+						result[0] = -1;
+						return result;
+					}
+					else {
+						double x1 = values.pop();
+						if(values.empty()) {
+							result[0] = -1;
+							return result;
+						}
+						else {
+							double x2 = values.pop();
+							values.push(
+									applyOperation( operator.pop(),
+													x1,
+													x2
+													)
+									);
+						}
+					}
+					
 				}
-				
-				operator.push(curr);
+				//Handles Last input is in +-*/ State
+				if(i == size -1) {
+					result[0] = -1;
+					return result;
+					}
+				else
+					operator.push(curr);
 			}
 			
 		}
@@ -125,5 +145,6 @@ public class expressionHandle {
 			System.out.print(">>>");
 			input = scan.next();
 		}
+		scan.close();
 	}
 }
