@@ -12,6 +12,8 @@ public class expressionHandle {
 		result[1] = 0;//Value of Calculation
 		int size = input.length();
 		char curr;
+		boolean closeParenthesisState = false;
+		
 		//My factors w/o including '('expression')'
 		Stack<Double> values = new Stack<>();
 		//My operators
@@ -23,7 +25,7 @@ public class expressionHandle {
 			//If its a numeric value
 			//Now Handle 
 			if((curr >= '0' && curr <= '9') || curr == '.') {
-				
+				closeParenthesisState = false;
 				//Run modified floatPointLiteral generator (modified)
 				String temp = input.substring(i);
 				double[] floatPointResults = machine.isValid(temp);
@@ -38,10 +40,16 @@ public class expressionHandle {
 			
 			
 			else if(curr == '(') {
-				operator.push(curr);
+				if(!closeParenthesisState)
+					operator.push(curr);
+				else {
+					result[0] = -1;
+					return result;
+				}
 			}
 			//When parenthesis close, evaluate the expression
 			else if(curr == ')') {
+				closeParenthesisState = true;
 				//Continue until a open Parenthesis is seen
 				while (operator.peek() != '(') {
 					values.push(
@@ -53,6 +61,7 @@ public class expressionHandle {
 			}
 			
 			else if(curr == '+' || curr == '-' || curr == '*' || curr == '/') {
+				closeParenthesisState = false;
 				while(!operator.empty() && hasPrecedence(curr, operator.peek())) {
 					if(values.empty()) {
 						result[0] = -1;
@@ -81,11 +90,16 @@ public class expressionHandle {
 					result[0] = -1;
 					return result;
 					}
-				else
+				else {
 					operator.push(curr);
+				}
+			}//END ELSE IF
+			else {
+				result[0] = -1;
+				return result;
 			}
 			
-		}
+		}//END FOR
 		
 		while(!operator.empty()) {
 			values.push(
